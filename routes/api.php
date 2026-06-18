@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\StockMovementController;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
@@ -29,6 +31,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
     });
+    // Ventas — cajero y admin pueden crear
+Route::get('/sales', [SaleController::class, 'index']);
+Route::get('/sales/today', [SaleController::class, 'todaySummary']);
+Route::get('/sales/{id}', [SaleController::class, 'show']);
+Route::middleware('role:admin,cajero')->group(function () {
+    Route::post('/sales', [SaleController::class, 'store']);
+});
+Route::middleware('role:admin')->group(function () {
+    Route::patch('/sales/{id}/cancel', [SaleController::class, 'cancel']);
+});
+
+// Movimientos de bodega — bodeguero y admin
+Route::get('/stock-movements', [StockMovementController::class, 'index']);
+Route::middleware('role:admin,bodeguero')->group(function () {
+    Route::post('/stock-movements', [StockMovementController::class, 'store']);
+});
 
     // Categorías — todos pueden ver
     Route::get('/categories', [CategoryController::class, 'index']);
