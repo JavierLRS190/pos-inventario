@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\StockMovementController;
-
+use App\Http\Controllers\Api\ReportController;
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -48,6 +48,12 @@ Route::middleware('role:admin,bodeguero')->group(function () {
     Route::post('/stock-movements', [StockMovementController::class, 'store']);
 });
 
+Route::middleware('role:admin')->prefix('reports')->group(function () {
+    Route::get('/sales',        [ReportController::class, 'salesByRange']);
+    Route::get('/top-products', [ReportController::class, 'topProducts']);
+    Route::get('/cash-cut',     [ReportController::class, 'cashCut']);
+    Route::get('/stock',        [ReportController::class, 'stockReport']);
+});
     // Categorías — todos pueden ver
     Route::get('/categories', [CategoryController::class, 'index']);
 });
