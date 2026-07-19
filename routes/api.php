@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\WarehouseController;
 
 // Auth
 Route::post('/login', [AuthController::class, 'login']);
@@ -42,6 +43,8 @@ Route::middleware('role:admin,cajero')->group(function () {
 Route::middleware('role:admin')->group(function () {
     Route::patch('/sales/{id}/cancel', [SaleController::class, 'cancel']);
 });
+Route::get('/warehouses', [WarehouseController::class, 'index']);
+
 
 // Movimientos de bodega — bodeguero y admin
 Route::get('/stock-movements', [StockMovementController::class, 'index']);
